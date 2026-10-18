@@ -2,6 +2,8 @@ const statusLabel = document.querySelector("[data-status-label]");
 const statusExplanation = document.querySelector("[data-status-explanation]");
 const versionValue = document.querySelector("[data-version]");
 const serverCountValue = document.querySelector("[data-server-count]");
+const commandCountValue = document.querySelector("[data-command-count]");
+const messageSentCountValue = document.querySelector("[data-message-sent-count]");
 const checkedAtValue = document.querySelector("[data-checked-at]");
 const uptimeValue = document.querySelector("[data-uptime]");
 const refreshButton = document.querySelector("[data-status-refresh]");
@@ -23,8 +25,17 @@ function setUnavailable(message) {
   statusExplanation.textContent = message;
   versionValue.textContent = "—";
   serverCountValue.textContent = "—";
+  commandCountValue.textContent = "Unavailable";
+  messageSentCountValue.textContent = "Unavailable";
   checkedAtValue.textContent = "—";
   uptimeValue.textContent = "—";
+}
+
+function validCount(value) {
+  return Number.isFinite(value)
+    && Number.isInteger(value)
+    && Number.isSafeInteger(value)
+    && value >= 0;
 }
 
 function validStatusPayload(payload) {
@@ -37,6 +48,10 @@ function validStatusPayload(payload) {
     && Number.isFinite(Date.parse(payload.checked_at))
     && Number.isFinite(payload.uptime_seconds)
     && payload.uptime_seconds >= 0;
+}
+
+function displayCount(element, value) {
+  element.textContent = validCount(value) ? value.toLocaleString() : "Unavailable";
 }
 
 async function loadStatus() {
@@ -80,6 +95,8 @@ async function loadStatus() {
     serverCountValue.textContent = payload.server_count === null
       ? "Unavailable"
       : String(payload.server_count);
+    displayCount(commandCountValue, payload.command_count);
+    displayCount(messageSentCountValue, payload.message_sent_count);
     checkedAtValue.textContent = new Date(payload.checked_at).toLocaleString(undefined, { timeZone: "UTC", timeZoneName: "short" });
     uptimeValue.textContent = prettyUptime(payload.uptime_seconds);
   } catch {
@@ -93,3 +110,4 @@ async function loadStatus() {
 
 refreshButton.addEventListener("click", loadStatus);
 loadStatus();
+window.setInterval(loadStatus, 30_000);

@@ -354,6 +354,9 @@ h2 { letter-spacing: -.035em; line-height: .98; }
 .status-row dt { color: #a7a59d; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; }
 .status-row dd { margin: 0; font-family: var(--display); font-size: clamp(22px, 3vw, 34px); letter-spacing: .01em; overflow-wrap: anywhere; }
 .status-row dd small { color: #b6b4ac; font-family: var(--body); font-size: 12px; letter-spacing: 0; }
+.status-row--metric { grid-template-columns: minmax(190px, .5fr) 1fr; padding-block: 21px; }
+.status-row--metric dd { font-size: clamp(30px, 4vw, 46px); }
+.status-live { display: inline-block; margin-left: 8px; padding: 3px 6px; border: 1px solid #53524d; color: #d0cec6; font-size: 8px; letter-spacing: .12em; vertical-align: 2px; }
 .status-source { margin-top: 24px; color: #aaa8a0; font-size: 12px; }
 .status-source p { margin-bottom: 8px; }
 .status-refresh { min-height: 42px; margin-top: 13px; padding: 0 14px; border: 1px solid #9b9991; background: transparent; color: #f5f4ef; cursor: pointer; font-size: 11px; }
@@ -510,6 +513,9 @@ h2 { letter-spacing: -.035em; line-height: .98; }
   .status-banner { flex-direction: column; gap: 12px; }
   .status-row { grid-template-columns: 1fr; gap: 3px; padding-block: 14px; }
   .status-row dd { font-size: 28px; }
+  .status-row--metric { grid-template-columns: 1fr; gap: 6px; padding-block: 16px; }
+  .status-row--metric dd { font-size: clamp(31px, 9vw, 40px); }
+  .status-live { margin-left: 5px; }
   .footer-main { min-height: 0; align-items: flex-start; flex-direction: column; padding-block: 23px; }
   .footer-links { gap: 12px 18px; }
   .footer-bottom { flex-direction: column; gap: 8px; }
