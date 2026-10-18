@@ -1,0 +1,1 @@
+window.SNOOZER_STATUS_API_URL = "";

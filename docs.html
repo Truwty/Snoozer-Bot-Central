@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090909">
+  <meta name="description" content="Read the Snoozer Bot Central setup guide, command overview, permissions, and status endpoint notes.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Docs — Snoozer Bot Central">
+  <meta property="og:description" content="Practical setup and operation notes for Snoozer Bot.">
+  <meta property="og:url" content="https://truwty.github.io/Snoozer-Bot-Central/docs.html">
+  <meta property="og:image" content="https://truwty.github.io/Snoozer-Bot-Central/assets/images/snoozer-banner.png">
+  <link rel="canonical" href="https://truwty.github.io/Snoozer-Bot-Central/docs.html">
+  <title>Docs — Snoozer Bot Central</title>
+  <link rel="icon" type="image/png" href="assets/images/snoozer-central-avatar.png">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script src="assets/js/site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="wordmark" href="index.html" aria-label="Snoozer Bot Central home"><img src="assets/images/snoozer-central-avatar.png" alt=""><span>Snoozer<small>Bot Central</small></span></a>
+      <nav class="primary-nav" aria-label="Main navigation"><a href="index.html">Home</a><a href="status.html">Status</a><a href="docs.html" aria-current="page">Docs</a><a href="help.html">Help</a></nav>
+      <div class="header-action"><a class="button" href="https://yapper.website/invite/h4mQ4fJ6">Join the server <span class="arrow" aria-hidden="true">↗</span></a></div>
+    </div>
+  </header>
+  <main id="main">
+    <section class="page-intro">
+      <div class="wrap page-intro-grid">
+        <div><p class="eyebrow">A practical field guide</p><h1>Set up your space.</h1><p>Start small, configure roles and permissions with care, and make each server's Snoozer setup its own.</p></div>
+        <div class="page-index"><strong>03 / 07</strong>Setup · Commands · Operations</div>
+      </div>
+    </section>
+    <section class="paper-stage">
+      <article class="paper-sheet">
+        <p class="paper-kicker">Snoozer Bot / Operator and server guide</p>
+        <p>These notes summarize the existing bot setup and command reference used by Snoozer. The bot is an operator-managed Python bot, not a hosted self-service service. Its features rely on Yapper for permissions and platform actions.</p>
+        <nav class="contents-box" aria-label="On this page">
+          <h3>In this guide</h3>
+          <ul><li><a href="#invite">Invite &amp; setup</a></li><li><a href="#roles">Roles &amp; permissions</a></li><li><a href="#commands">Command overview</a></li><li><a href="#isolation">Server isolation</a></li><li><a href="#configuration">Configuration &amp; data</a></li><li><a href="#status-endpoint">Status endpoint</a></li><li><a href="#troubleshooting">Troubleshooting</a></li></ul>
+        </nav>
+
+        <section id="invite">
+          <h2>Invite &amp; setup</h2>
+          <p>Join <a href="https://yapper.website/invite/h4mQ4fJ6">Snoozer Bot Central</a> for community and setup guidance. The invite is for the community server; running the bot itself requires an operator to set up and keep the process running.</p>
+          <ol>
+            <li>Download or clone the bot project and open its folder.</li>
+            <li>Use Python 3.10 or newer. The bot uses the Python standard library and has no third-party package dependencies.</li>
+            <li>On Windows, run <code>start_snoozer.bat</code>; on other platforms, run <code>python main.py</code>.</li>
+            <li>On first launch, enter the private Yapper bot token and owner user ID when prompted. Token input is hidden.</li>
+            <li>Keep the process running for events, scheduled reminders, and temporary-role removals.</li>
+          </ol>
+          <p>Keep the bot process on an operator-controlled machine and never publish its private configuration or runtime data.</p>
+        </section>
+
+        <hr class="paper-rule">
+        <section id="roles">
+          <h2>Roles &amp; permissions</h2>
+          <p>In each server, the owner can set Snoozer's staff roles using <code>/setmodrole</code> and <code>/setmanagerrole</code>. Review that server's values and module state with <code>/config</code>. The configured owner, moderator, and manager roles govern Snoozer commands, while Yapper independently enforces the bot's platform permissions.</p>
+          <ul>
+            <li><strong>Owner:</strong> the Yapper user ID entered during first-run setup; can configure Snoozer's moderator and manager roles.</li>
+            <li><strong>Moderator:</strong> role set with <code>/setmodrole</code>; can use moderation commands.</li>
+            <li><strong>Manager:</strong> role set with <code>/setmanagerrole</code>; can manage server settings and modules.</li>
+            <li><strong>Bot permissions:</strong> grant only the Yapper permissions Snoozer needs for the actions you enable.</li>
+          </ul>
+          <p>Some commands need additional Yapper permissions, such as Manage Messages for <code>/purge</code>. A role inside Snoozer does not override the platform's permission checks.</p>
+        </section>
+
+        <hr class="paper-rule">
+        <section id="commands">
+          <h2>Command overview</h2>
+          <p>The command picker is shared at bot level and limited to 100 registered entries. Some secondary aliases may be prefix-only; try <code>!command</code> if a command is not in the slash picker. The overview below is not complete; follow each command's documented usage and access requirements.</p>
+          <dl class="command-list">
+            <div class="command-item"><dt>Information &amp; utilities</dt><dd><code>/help</code>, <code>/info</code>, <code>/ping</code>, <code>/stats</code>, <code>/uptime</code>, <code>/serverinfo</code></dd></div>
+            <div class="command-item"><dt>Community</dt><dd><code>/poll</code>, <code>/suggest</code>, <code>/giveaway</code>, <code>/remindme</code>, <code>/rank</code>, <code>/leaderboard</code>, <code>/balance</code>, <code>/daily</code>, <code>/pay</code>, <code>/afk</code></dd></div>
+            <div class="command-item"><dt>Moderation</dt><dd><code>/kick</code>, <code>/ban</code>, <code>/timeout</code>, <code>/warn</code>, <code>/note</code>, <code>/modlogs</code>, <code>/case</code>, <code>/purge</code>, <code>/lock</code></dd></div>
+            <div class="command-item"><dt>Server management</dt><dd><code>/setmodrole</code>, <code>/setmanagerrole</code>, <code>/setlogchannel</code>, <code>/setwelcome</code>, <code>/autorole</code>, <code>/automod</code>, <code>/module</code>, <code>/command</code>, <code>/config</code>, <code>/diagnose</code></dd></div>
+          </dl>
+          <p>These are an overview, not a complete list. Exact syntax, limits, aliases, and permission notes are set out in the bot project's command reference.</p>
+        </section>
+
+        <hr class="paper-rule">
+        <section id="isolation">
+          <h2>Separate server scopes</h2>
+          <p>One Snoozer process can serve multiple Yapper servers. Moderation roles, modules, channels, welcome settings, custom commands, activity, economy, polls, giveaways, and reminders use server-specific scopes. Reminder listings and cancellation stay within the current server; giveaway entries and draws cannot operate on another server's giveaway.</p>
+          <p>Yapper registers one command menu for the bot, so custom command names configured in different servers are combined in that shared menu. A custom command responds only in servers where it is configured. Secondary and unlisted commands may require the documented prefix form.</p>
+          <p>The local JSON store is not a shared database for multiple processes. Do not run multiple Snoozer instances against the same JSON file; the project README says this requires replacing local JSON storage with a shared transactional database first.</p>
+        </section>
+
+        <hr class="paper-rule">
+        <section id="configuration">
+          <h2>Configuration &amp; local data</h2>
+          <p>The private bot token is entered at setup and saved in the operator's local <code>config.json</code>, which is ignored by Git. Runtime state is in <code>data/state.json</code>, also excluded from Git. Do not publish either file, and back up state securely.</p>
+          <p>Depending on enabled commands, local state can include server settings; user IDs; moderation records and private notes; reminders; poll and giveaway entries; activity XP, Snoozer Coins, and AFK state. The exact data present varies by usage and configuration.</p>
+          <p>The bot depends on Yapper for platform permissions, server actions, and API behavior. Availability and action outcomes can therefore also depend on Yapper and the operator's bot setup.</p>
+        </section>
+
+        <hr class="paper-rule">
+        <section id="status-endpoint">
+          <h2>Status endpoint</h2>
+          <p>The website does not include a status server or bot token. Its status page only attempts a request after an operator sets a public endpoint URL in <code>website/assets/js/config.js</code>:</p>
+          <div class="callout"><p><code>window.SNOOZER_STATUS_API_URL = "https://your-status-host.example/status.json";</code></p><p>The example host above is a placeholder, not a Snoozer service URL.</p></div>
+          <p>That URL must serve JSON matching this contract. These are field definitions, not live readings:</p>
+          <dl class="command-list">
+            <div class="command-item"><dt><code>status</code></dt><dd>String: exactly <code>"online"</code> or <code>"offline"</code>, based on the endpoint's actual check.</dd></div>
+            <div class="command-item"><dt><code>version</code></dt><dd>String identifying the reported bot version.</dd></div>
+            <div class="command-item"><dt><code>server_count</code></dt><dd>Non-negative integer reported by the bot, or <code>null</code> when no count is available.</dd></div>
+            <div class="command-item"><dt><code>checked_at</code></dt><dd>ISO-8601 UTC timestamp ending in <code>Z</code> or <code>+00:00</code>.</dd></div>
+            <div class="command-item"><dt><code>uptime_seconds</code></dt><dd>Non-negative number of seconds reported by the process.</dd></div>
+          </dl>
+          <p>Serve the JSON through an HTTPS reverse proxy or a properly secured tunnel; do not expose the bot's raw unauthenticated HTTP listener or put any bot token in the page, response, or browser config. Expose only the intended read-only status data, configure cross-origin access for the published site, and test the endpoint without secrets. Anyone able to load the public website can see the status fields it returns.</p>
+          <p>If the URL is unset, HTTPS is unavailable, CORS blocks the browser, the endpoint cannot be reached, or the JSON is invalid, the page shows “Unable to verify.” An endpoint failure is not presented as proof that the bot is offline.</p>
+        </section>
+
+        <hr class="paper-rule">
+        <section id="troubleshooting">
+          <h2>Troubleshooting</h2>
+          <ul>
+            <li><strong>A command is missing from the picker:</strong> the shared menu is limited to 100 entries; try the documented prefix form for commands that are not in the slash picker.</li>
+            <li><strong>An action is denied or fails:</strong> check the server's configured staff roles with <code>/config</code> and confirm Yapper granted the bot the permission for that action.</li>
+            <li><strong>Settings seem different between servers:</strong> configuration is intentionally server-specific; use <code>/config</code> in the server being checked.</li>
+            <li><strong>Scheduled tasks are late or missing:</strong> the bot process needs to remain running for reminders and temporary-role removals.</li>
+            <li><strong>Status says it cannot verify:</strong> confirm the configured HTTPS endpoint, response contract, reachability, and browser CORS access. This state does not mean the bot is offline.</li>
+          </ul>
+          <p>For community support, use the <a href="help.html">Help page</a> and the <a href="https://yapper.website/invite/h4mQ4fJ6">Snoozer Bot Central server</a>.</p>
+        </section>
+        <div class="paper-meta"><span>Based on the bot's README and command reference</span><span>Operator-run · Yapper-dependent</span></div>
+      </article>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap footer-main"><a class="wordmark" href="index.html" aria-label="Snoozer Bot Central home"><img src="assets/images/snoozer-central-avatar.png" alt=""><span>Snoozer<small>Bot Central</small></span></a><nav class="footer-links" aria-label="Footer navigation"><a href="status.html">Status</a><a href="docs.html">Docs</a><a href="help.html">Help</a><a href="terms.html">Terms</a><a href="privacy.html">Privacy</a><a href="cookies.html">Cookies</a><button type="button" data-open-cookie-info>Cookie information</button></nav></div>
+    <div class="wrap footer-bottom"><p>Snoozer is an independent community project, not affiliated with Yapper, Dyno, or Discord. This site uses no analytics, advertising, or third-party trackers.</p><span>© Snoozer Bot Central</span></div>
+  </footer>
+  <aside class="cookie-notice" data-cookie-notice aria-labelledby="cookie-notice-title"><h2 id="cookie-notice-title">No tracking cookies</h2><p>No cookies, persistent browser storage, or analytics. Dismissal lasts for this page only.</p><div class="cookie-notice-actions"><button type="button" data-dismiss-notice>Dismiss this page</button><a href="cookies.html">Cookie policy</a></div></aside>
+  <dialog class="cookie-dialog" data-cookie-dialog aria-labelledby="cookie-dialog-title"><h2 id="cookie-dialog-title">Cookie information</h2><p>This site does not set cookies or use localStorage, sessionStorage, analytics, advertising, or third-party trackers. There are no optional tracking cookies to accept or reject.</p><button type="button" data-close-cookie-info>Close</button></dialog>
+</body>
+</html>
