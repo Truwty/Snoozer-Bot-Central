@@ -1,0 +1,811 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090909">
+  <meta name="description" content="A quieter kind of server companion. Meet Snoozer: practical moderation and community tools for Yapper servers.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Snoozer Bot Central — a little more room to breathe">
+  <meta property="og:description" content="Practical moderation and community tools for Yapper servers.">
+  <meta property="og:image" content="https://truwty.github.io/Snoozer-Bot-Central/assets/snoozer-banner.png">
+  <title>Snoozer Bot Central — a little more room to breathe</title>
+  <link rel="icon" type="image/png" href="assets/snoozer-central-avatar.png">
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #090909;
+      --paper: #f3f2ee;
+      --white: #faf9f6;
+      --muted: #aaa9a5;
+      --line: #343432;
+      --line-light: #d7d5cf;
+      --display: "Arial Black", "Arial Narrow", Impact, sans-serif;
+      --body: Inter, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --page: min(1320px, calc(100% - 96px));
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+    body {
+      margin: 0;
+      background: var(--ink);
+      color: var(--white);
+      font-family: var(--body);
+      font-size: 16px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; }
+    a:focus-visible {
+      outline: 2px solid var(--white);
+      outline-offset: 5px;
+    }
+    .skip-link {
+      position: fixed;
+      z-index: 20;
+      top: 12px;
+      left: 12px;
+      padding: 10px 14px;
+      transform: translateY(-160%);
+      background: var(--white);
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .skip-link:focus { transform: translateY(0); }
+    .wrap { width: var(--page); margin-inline: auto; }
+
+    .site-header {
+      position: sticky;
+      z-index: 10;
+      top: 0;
+      border-bottom: 1px solid var(--line);
+      background: #090909;
+    }
+    .header-inner {
+      min-height: 76px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 28px;
+    }
+    .wordmark {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      gap: 12px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 750;
+      letter-spacing: -.025em;
+    }
+    .wordmark img {
+      width: 38px;
+      aspect-ratio: 1;
+      border: 1px solid #585858;
+      border-radius: 50%;
+    }
+    .wordmark small {
+      display: block;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: clamp(18px, 2.5vw, 36px);
+    }
+    .main-nav a {
+      display: inline-block;
+      padding-block: 5px;
+      color: #c3c2be;
+      font-size: 12px;
+      text-decoration: none;
+      transition: color .18s ease;
+    }
+    .main-nav a:hover { color: var(--white); }
+    .header-action { justify-self: end; }
+    .button {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      padding: 0 20px;
+      border: 1px solid var(--white);
+      background: var(--white);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 750;
+      letter-spacing: .025em;
+      text-decoration: none;
+      transition: background .18s ease, color .18s ease, transform .18s ease;
+    }
+    .button:hover { transform: translateY(-2px); background: transparent; color: var(--white); }
+    .button .arrow { font-size: 17px; line-height: 1; }
+    .button-quiet { background: transparent; color: var(--white); }
+    .button-quiet:hover { background: var(--white); color: var(--ink); }
+
+    .hero {
+      min-height: 680px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(400px, .98fr);
+      align-items: center;
+      gap: clamp(42px, 7vw, 100px);
+      padding-block: 82px 95px;
+    }
+    .eyebrow, .section-kicker, .micro-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 650;
+      letter-spacing: .17em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      width: 24px;
+      height: 1px;
+      content: "";
+      background: var(--white);
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      max-width: 720px;
+      margin: 27px 0 24px;
+      font-family: var(--display);
+      font-size: clamp(68px, 7.2vw, 104px);
+      font-weight: 900;
+      letter-spacing: -.085em;
+      line-height: .91;
+    }
+    h1 span { color: #8b8b87; }
+    .hero-copy {
+      max-width: 475px;
+      margin-bottom: 31px;
+      color: #c4c3bf;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .hero-note {
+      margin-top: 25px;
+      color: #777773;
+      font-size: 11px;
+    }
+    .hero-note strong { color: #bdbcb7; font-weight: 600; }
+    .hero-art {
+      position: relative;
+      isolation: isolate;
+      padding: 15px;
+      border: 1px solid #393937;
+    }
+    .hero-art::before, .hero-art::after {
+      position: absolute;
+      z-index: -1;
+      width: 94px;
+      height: 94px;
+      content: "";
+      border-color: #777772;
+      border-style: solid;
+      opacity: .65;
+    }
+    .hero-art::before { top: -7px; right: -7px; border-width: 1px 1px 0 0; }
+    .hero-art::after { bottom: -7px; left: -7px; border-width: 0 0 1px 1px; }
+    .banner-frame {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      background: #202020;
+    }
+    .banner-frame > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .art-index {
+      position: absolute;
+      right: 17px;
+      bottom: 17px;
+      padding: 6px 9px;
+      background: rgba(8, 8, 8, .88);
+      color: var(--white);
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .art-caption {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding-top: 14px;
+      color: #aaa9a5;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .art-caption span:last-child { color: #777773; }
+    .hero-side-note {
+      position: absolute;
+      right: -39px;
+      top: 47%;
+      color: #7a7a75;
+      font-size: 9px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      writing-mode: vertical-rl;
+    }
+    .hero-bottomline {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 20px;
+      margin-top: 30px;
+      padding-top: 15px;
+      border-top: 1px solid var(--line);
+      color: #888883;
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .hero-bottomline span:last-child { color: #d5d4d0; }
+
+    .manifesto {
+      padding-block: 28px;
+      border-block: 1px solid var(--line);
+      background: #101010;
+    }
+    .manifesto-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+    }
+    .manifesto p {
+      max-width: 850px;
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(17px, 2.4vw, 30px);
+      letter-spacing: -.045em;
+      line-height: 1.25;
+    }
+    .manifesto p span { color: #8d8c87; }
+    .manifesto-mark {
+      flex: 0 0 auto;
+      color: #8e8e89;
+      font-size: 10px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    .section { padding-block: 120px; }
+    .section-heading {
+      display: grid;
+      grid-template-columns: 1fr minmax(240px, .5fr);
+      align-items: end;
+      gap: 50px;
+      margin-bottom: 55px;
+    }
+    .section-kicker { margin-bottom: 19px; }
+    .section-heading h2, .community-copy h2 {
+      margin: 0;
+      font-family: var(--display);
+      font-size: clamp(44px, 6vw, 76px);
+      font-weight: 900;
+      letter-spacing: -.075em;
+      line-height: .98;
+    }
+    .section-heading > p {
+      max-width: 410px;
+      margin: 0 0 5px;
+      color: #aaa9a5;
+      font-size: 14px;
+      line-height: 1.75;
+    }
+    .feature-layout {
+      display: grid;
+      grid-template-columns: 1.12fr .88fr;
+      align-items: stretch;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .feature-lead {
+      min-height: 346px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 34px 40px 35px 0;
+      border-right: 1px solid var(--line);
+    }
+    .feature-number {
+      color: #888883;
+      font-size: 10px;
+      letter-spacing: .15em;
+    }
+    .feature-lead h3 {
+      max-width: 510px;
+      margin: 45px 0 13px;
+      font-family: var(--display);
+      font-size: clamp(30px, 4vw, 49px);
+      letter-spacing: -.055em;
+      line-height: 1;
+    }
+    .feature-lead p, .feature-item p {
+      max-width: 450px;
+      margin-bottom: 0;
+      color: #a6a5a0;
+      font-size: 13px;
+      line-height: 1.75;
+    }
+    .feature-lead .feature-number:last-child { color: #bcbab5; }
+    .feature-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .feature-item {
+      min-height: 173px;
+      padding: 26px 28px;
+      border-bottom: 1px solid var(--line);
+    }
+    .feature-item:nth-child(odd) { border-right: 1px solid var(--line); }
+    .feature-item:nth-last-child(-n+2) { border-bottom: 0; }
+    .feature-item h3 {
+      margin: 16px 0 7px;
+      font-size: 15px;
+      letter-spacing: -.025em;
+    }
+    .feature-item p { font-size: 12px; }
+    .feature-tag {
+      color: #777772;
+      font-size: 9px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .feature-endnote {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 17px;
+      color: #777772;
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .start-section {
+      background: var(--paper);
+      color: var(--ink);
+    }
+    .start-section .section-kicker { color: #686762; }
+    .start-section .section-heading > p { color: #585751; }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--line-light);
+      border-bottom: 1px solid var(--line-light);
+    }
+    .step {
+      min-height: 244px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px 28px 29px;
+      border-right: 1px solid var(--line-light);
+    }
+    .step:first-child { padding-left: 0; }
+    .step:last-child { border: 0; }
+    .step-index {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #66655f;
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .step-index b {
+      color: #aaa9a3;
+      font-family: var(--display);
+      font-size: 33px;
+      letter-spacing: -.08em;
+    }
+    .step h3 {
+      margin: 30px 0 9px;
+      font-family: var(--display);
+      font-size: clamp(22px, 2.6vw, 32px);
+      letter-spacing: -.055em;
+      line-height: 1.05;
+    }
+    .step p {
+      max-width: 300px;
+      margin: 0;
+      color: #5f5e58;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+    .start-footnote {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 18px;
+      color: #6c6b65;
+      font-size: 10px;
+    }
+
+    .community {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(250px, .7fr);
+      align-items: center;
+      gap: 75px;
+      padding-block: 112px;
+    }
+    .community-copy h2 { max-width: 680px; }
+    .community-copy > p {
+      max-width: 480px;
+      margin: 20px 0 28px;
+      color: #aaa9a5;
+      font-size: 14px;
+      line-height: 1.75;
+    }
+    .community-seal {
+      justify-self: end;
+      width: min(300px, 100%);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      border: 1px solid #41413e;
+      border-radius: 50%;
+      position: relative;
+    }
+    .community-seal::before, .community-seal::after {
+      position: absolute;
+      content: "";
+      border: 1px solid #2f2f2d;
+      border-radius: inherit;
+    }
+    .community-seal::before { inset: 13px; }
+    .community-seal::after { inset: 26px; }
+    .community-seal img {
+      width: 46%;
+      border-radius: 50%;
+      box-shadow: 0 0 0 8px var(--ink), 0 0 0 9px #484844;
+    }
+    .seal-label {
+      position: absolute;
+      top: 14%;
+      color: #96958f;
+      font-size: 9px;
+      letter-spacing: .19em;
+      text-transform: uppercase;
+    }
+    .community .section-kicker { margin-bottom: 22px; }
+    .invite-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+      color: #797873;
+      font-size: 10px;
+      letter-spacing: .08em;
+    }
+    .invite-meta::before {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      content: "";
+      background: #c9c8c2;
+    }
+
+    .site-footer {
+      border-top: 1px solid var(--line);
+      background: #070707;
+    }
+    .footer-main {
+      min-height: 114px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+    }
+    .footer-main .wordmark img { width: 32px; }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .footer-links a {
+      color: #aaa9a5;
+      font-size: 11px;
+      text-decoration: none;
+    }
+    .footer-links a:hover { color: var(--white); text-decoration: underline; text-underline-offset: 4px; }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding-block: 16px;
+      border-top: 1px solid #292927;
+      color: #797873;
+      font-size: 10px;
+      line-height: 1.6;
+    }
+    .footer-bottom p { max-width: 720px; margin: 0; }
+    .footer-bottom span { white-space: nowrap; }
+
+    @media (max-width: 980px) {
+      :root { --page: min(calc(100% - 56px), 760px); }
+      .header-inner { grid-template-columns: 1fr auto; gap: 12px; padding-block: 12px; }
+      .main-nav { grid-column: 1 / -1; grid-row: 2; justify-content: center; padding-bottom: 6px; }
+      .header-action { grid-column: 2; grid-row: 1; }
+      .hero {
+        min-height: auto;
+        grid-template-columns: 1fr .88fr;
+        gap: 36px;
+        padding-block: 72px 80px;
+      }
+      h1 { font-size: clamp(58px, 9vw, 82px); }
+      .hero-art { padding: 11px; }
+      .section { padding-block: 90px; }
+      .feature-lead { min-height: 360px; padding-right: 28px; }
+      .feature-item { padding-inline: 20px; }
+      .community { gap: 35px; padding-block: 90px; }
+    }
+    @media (min-width: 681px) and (max-width: 820px) {
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 38px;
+        padding-block: 68px 72px;
+      }
+      .hero-content { max-width: 680px; }
+      h1 { max-width: 660px; font-size: clamp(76px, 10vw, 88px); }
+      .hero-art { width: min(100%, 680px); justify-self: center; }
+      .hero-side-note { right: -21px; }
+      .banner-frame { aspect-ratio: 16 / 9; }
+      .feature-layout { grid-template-columns: 1fr; }
+      .feature-lead {
+        min-height: 265px;
+        padding: 27px 0 29px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .feature-lead h3 { max-width: 660px; margin-top: 32px; font-size: 42px; }
+      .feature-list { grid-template-columns: 1fr 1fr; }
+      .feature-item { min-height: 162px; padding: 23px 25px; }
+      .feature-item:nth-child(odd) { border-right: 1px solid var(--line); }
+    }
+    @media (max-width: 680px) {
+      :root { --page: calc(100% - 40px); }
+      html { scroll-padding-top: 130px; }
+      .header-inner { min-height: 0; gap: 10px; }
+      .wordmark { gap: 9px; font-size: 12px; }
+      .wordmark img { width: 34px; }
+      .wordmark small { font-size: 8px; }
+      .header-action .button { min-height: 40px; gap: 8px; padding-inline: 12px; font-size: 10px; }
+      .main-nav { justify-content: space-between; gap: 9px; }
+      .main-nav a { font-size: 10px; }
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 39px;
+        padding-block: 63px 55px;
+      }
+      h1 { max-width: 520px; font-size: clamp(54px, 14.5vw, 82px); }
+      .hero-copy { max-width: 440px; font-size: 14px; }
+      .hero-art { width: calc(100% - 10px); justify-self: center; }
+      .banner-frame { aspect-ratio: 16 / 9; }
+      .hero-side-note { right: -21px; }
+      .hero-bottomline { font-size: 8px; }
+      .manifesto { padding-block: 22px; }
+      .manifesto-inner { align-items: flex-start; flex-direction: column; gap: 12px; }
+      .manifesto p { font-size: 21px; }
+      .manifesto-mark { font-size: 8px; }
+      .section { padding-block: 72px; }
+      .section-heading { grid-template-columns: 1fr; gap: 18px; margin-bottom: 34px; }
+      .section-heading h2, .community-copy h2 { font-size: clamp(43px, 12vw, 64px); }
+      #features .section-heading h2 { font-size: clamp(36px, 10vw, 56px); }
+      .section-heading > p { font-size: 13px; }
+      .feature-layout { grid-template-columns: 1fr; }
+      .feature-lead { min-height: 270px; padding: 25px 0 28px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .feature-lead h3 { margin-top: 38px; font-size: 37px; }
+      .feature-item { min-height: 160px; padding: 19px 12px 20px 0; }
+      .feature-item:nth-child(odd) { border-right: 1px solid var(--line); }
+      .feature-item:nth-child(even) { padding-left: 15px; }
+      .feature-item h3 { font-size: 13px; }
+      .feature-item p { font-size: 11px; }
+      .feature-endnote { font-size: 8px; }
+      .steps { grid-template-columns: 1fr; }
+      .step, .step:first-child {
+        min-height: 190px;
+        padding: 20px 0 24px;
+        border-right: 0;
+        border-bottom: 1px solid var(--line-light);
+      }
+      .step:last-child { border-bottom: 0; }
+      .step h3 { margin-top: 19px; font-size: 28px; }
+      .start-footnote { flex-direction: column; gap: 4px; font-size: 9px; }
+      .community { grid-template-columns: 1fr; gap: 42px; padding-block: 74px; }
+      .community-seal { justify-self: center; width: min(230px, 74vw); grid-row: 1; }
+      .community-copy { grid-row: 2; }
+      .community-copy > p { font-size: 13px; }
+      .footer-main { min-height: 0; align-items: flex-start; flex-direction: column; padding-block: 25px; }
+      .footer-links { gap: 18px; }
+      .footer-bottom { flex-direction: column; gap: 8px; }
+      .footer-bottom span { white-space: normal; }
+    }
+    @media (max-width: 380px) {
+      :root { --page: calc(100% - 32px); }
+      h1 { font-size: clamp(48px, 14vw, 54px); }
+      .header-action .button { padding-inline: 9px; }
+      .main-nav a { font-size: 9px; }
+      .hero-actions .button { min-height: 45px; padding-inline: 14px; }
+      .feature-item { padding-right: 8px; }
+      .feature-item:nth-child(even) { padding-left: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="top">
+    <div class="wrap header-inner">
+      <a class="wordmark" href="#top" aria-label="Snoozer Bot Central home">
+        <img src="assets/snoozer-central-avatar.png" alt="">
+        <span>Snoozer<small>Bot Central</small></span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="#features">What it does</a>
+        <a href="#start">Getting started</a>
+        <a href="#community">Community</a>
+      </nav>
+      <div class="header-action">
+        <a class="button" href="https://yapper.website/invite/h4mQ4fJ6">Join the server <span class="arrow" aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="wrap hero" aria-labelledby="hero-title">
+      <div class="hero-content">
+        <p class="eyebrow">The Yapper server companion</p>
+        <h1 id="hero-title">Less noise.<br><span>More room.</span></h1>
+        <p class="hero-copy">A thoughtful set of tools for the people who keep a community moving. Snoozer handles the busywork, so your server can feel like yours.</p>
+        <div class="hero-actions">
+          <a class="button" href="https://yapper.website/invite/h4mQ4fJ6">Find your people <span class="arrow" aria-hidden="true">↗</span></a>
+          <a class="button button-quiet" href="#features">Meet Snoozer <span class="arrow" aria-hidden="true">↓</span></a>
+        </div>
+        <p class="hero-note"><strong>Built for Yapper.</strong> Made for the everyday care behind a good server.</p>
+      </div>
+      <figure class="hero-art">
+        <div class="banner-frame">
+          <img src="assets/snoozer-banner.png" alt="Snoozer Bot Central's wide illustrated banner artwork">
+          <span class="art-index">SB–001 · Central</span>
+        </div>
+        <figcaption class="art-caption"><span>Quietly keeping things in order</span><span>Yapper / Community</span></figcaption>
+        <span class="hero-side-note" aria-hidden="true">Stay a little longer</span>
+      </figure>
+    </section>
+
+    <section class="manifesto" aria-label="Snoozer's approach">
+      <div class="wrap manifesto-inner">
+        <p>More time for your members.<br><span>Less time repeating yourself.</span></p>
+        <span class="manifesto-mark">Useful by design · Snoozer</span>
+      </div>
+    </section>
+
+    <section class="wrap section" id="features" aria-labelledby="features-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">01 / The toolkit</p>
+          <h2 id="features-title">The calm behind<br>the conversation.</h2>
+        </div>
+        <p>Every community has its own rhythm. Start with the essentials, switch on what helps, and keep the focus where it belongs: on your people.</p>
+      </div>
+
+      <div class="feature-layout">
+        <article class="feature-lead">
+          <span class="feature-number">01 — A steady hand</span>
+          <div>
+            <h3>Moderation that gives you the context.</h3>
+            <p>Handle common staff actions, keep a record of cases, and set up message filters that fit the rules of your server.</p>
+          </div>
+          <span class="feature-number">Cases · Roles · AutoMod</span>
+        </article>
+        <div class="feature-list">
+          <article class="feature-item">
+            <span class="feature-tag">02 / First impressions</span>
+            <h3>Welcomes &amp; goodbyes</h3>
+            <p>Set a channel and message that sound like your community.</p>
+          </article>
+          <article class="feature-item">
+            <span class="feature-tag">03 / Self-serve</span>
+            <h3>Reaction roles</h3>
+            <p>Let members choose from the roles you make available.</p>
+          </article>
+          <article class="feature-item">
+            <span class="feature-tag">04 / Little helpers</span>
+            <h3>Community tools</h3>
+            <p>Polls, suggestions, reminders, activity, and more in one place.</p>
+          </article>
+          <article class="feature-item">
+            <span class="feature-tag">05 / One companion</span>
+            <h3>More than one server</h3>
+            <p>Keep each server's settings and community features in their own lane.</p>
+          </article>
+        </div>
+      </div>
+      <div class="feature-endnote"><span>Made for the people who make a place</span><span>Tools stay in their lane. Your community sets the tone.</span></div>
+    </section>
+
+    <section class="start-section" id="start" aria-labelledby="start-title">
+      <div class="wrap section">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">02 / A simple start</p>
+            <h2 id="start-title">Three steps.<br>Then your own pace.</h2>
+          </div>
+          <p>Bring Snoozer into your server, set the permissions that make sense, and shape the tools around the way your people already gather.</p>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <div class="step-index"><span>First / Say hello</span><b>01</b></div>
+            <div><h3>Join the conversation.</h3><p>Meet the community in Snoozer Bot Central and get a feel for what the bot can do.</p></div>
+          </article>
+          <article class="step">
+            <div class="step-index"><span>Next / Bring it in</span><b>02</b></div>
+            <div><h3>Add Snoozer to Yapper.</h3><p>Use Yapper's invite flow, then choose the server where you'd like your companion.</p></div>
+          </article>
+          <article class="step">
+            <div class="step-index"><span>Finally / Make it yours</span><b>03</b></div>
+            <div><h3>Set your own defaults.</h3><p>Configure staff roles, channels, and the modules that suit your community.</p></div>
+          </article>
+        </div>
+        <div class="start-footnote"><span>Permission-aware by default</span><span>Yapper still controls access and platform actions.</span></div>
+      </div>
+    </section>
+
+    <section class="wrap community" id="community" aria-labelledby="community-title">
+      <div class="community-copy">
+        <p class="section-kicker">03 / The people behind the pings</p>
+        <h2 id="community-title">There’s a place for you at Snoozer Bot Central.</h2>
+        <p>Questions, ideas, setup talk, or just a quiet hello. Come meet the people building a more considered corner of Yapper.</p>
+        <a class="button" href="https://yapper.website/invite/h4mQ4fJ6">Step inside <span class="arrow" aria-hidden="true">↗</span></a>
+        <p class="invite-meta">Snoozer Bot Central · Yapper community</p>
+      </div>
+      <div class="community-seal" aria-label="Snoozer Bot Central community artwork">
+        <span class="seal-label">A place to land</span>
+        <img src="assets/snoozer-central-avatar.png" alt="Snoozer's sleepy moon avatar">
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-main">
+      <a class="wordmark" href="#top" aria-label="Back to Snoozer Bot Central home">
+        <img src="assets/snoozer-central-avatar.png" alt="">
+        <span>Snoozer<small>Bot Central</small></span>
+      </a>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="#features">Features</a>
+        <a href="#start">Getting started</a>
+        <a href="https://yapper.website/invite/h4mQ4fJ6">Community invite ↗</a>
+      </nav>
+    </div>
+    <div class="wrap footer-bottom">
+      <p>Snoozer is an independent community project and is not affiliated with Yapper or Dyno. Yapper is a trademark of its respective owner.</p>
+      <span>Made with care for the people who keep servers kind.</span>
+    </div>
+  </footer>
+</body>
+</html>
