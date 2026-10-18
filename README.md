@@ -11,9 +11,9 @@ This is a dependency-free static site. It uses local images, CSS, and JavaScript
 
 ## Live bot status
 
-The website can display the bot's version, online/offline state, server count, check time, and uptime when its public read-only status API is configured. The source URL in `assets/js/config.js` is intentionally blank by default, so the page says **Unable to verify** instead of guessing the bot is offline.
+The website displays the bot's version, online/offline state, server count, check time, and uptime using the public read-only status API configured in `assets/js/config.js`. This installation currently uses a Cloudflare Quick Tunnel, which has no uptime guarantee and is available only while the bot and tunnel run on the operator's PC. Its random URL can change after a restart; if that happens, update the URL in `assets/js/config.js` and republish. For stable long-term access, use a named tunnel with a domain you control.
 
-The bot's status listener binds to `127.0.0.1` over HTTP by default. To make it available to GitHub Pages, the operator must place it behind an HTTPS reverse proxy or secure tunnel, then set `window.SNOOZER_STATUS_API_URL` in `assets/js/config.js` to that HTTPS endpoint. Never publish the bot token or expose the listener directly over public plaintext HTTP.
+The bot's status listener binds to `127.0.0.1` over HTTP by default. It is exposed through Cloudflare Tunnel HTTPS; the listener itself remains loopback-only. Never publish the bot token or expose the listener directly over public plaintext HTTP.
 
 ## Deployment and source
 

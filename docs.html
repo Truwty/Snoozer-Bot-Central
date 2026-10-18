@@ -99,8 +99,8 @@
         <hr class="paper-rule">
         <section id="status-endpoint">
           <h2>Status endpoint</h2>
-          <p>The website does not include a status server or bot token. Its status page only attempts a request after an operator sets a public endpoint URL in <code>website/assets/js/config.js</code>:</p>
-          <div class="callout"><p><code>window.SNOOZER_STATUS_API_URL = "https://your-status-host.example/status.json";</code></p><p>The example host above is a placeholder, not a Snoozer service URL.</p></div>
+          <p>The website does not include a status server or bot token. Its status page requests the public HTTPS endpoint configured in <code>website/assets/js/config.js</code>. This installation currently uses a Cloudflare Quick Tunnel:</p>
+          <div class="callout"><p><code>window.SNOOZER_STATUS_API_URL = "https://rolled-submission-galaxy-expenses.trycloudflare.com/api/status";</code></p><p>This temporary URL works only while the Snoozer bot and Cloudflare Tunnel are running on the operator's PC. Quick Tunnels have no uptime guarantee and may receive a different URL after restart; update the website setting and republish if that happens.</p></div>
           <p>That URL must serve JSON matching this contract. These are field definitions, not live readings:</p>
           <dl class="command-list">
             <div class="command-item"><dt><code>status</code></dt><dd>String: exactly <code>"online"</code> or <code>"offline"</code>, based on the endpoint's actual check.</dd></div>
@@ -109,7 +109,7 @@
             <div class="command-item"><dt><code>checked_at</code></dt><dd>ISO-8601 UTC timestamp ending in <code>Z</code> or <code>+00:00</code>.</dd></div>
             <div class="command-item"><dt><code>uptime_seconds</code></dt><dd>Non-negative number of seconds reported by the process.</dd></div>
           </dl>
-          <p>Serve the JSON through an HTTPS reverse proxy or a properly secured tunnel; do not expose the bot's raw unauthenticated HTTP listener or put any bot token in the page, response, or browser config. Expose only the intended read-only status data, configure cross-origin access for the published site, and test the endpoint without secrets. Anyone able to load the public website can see the status fields it returns.</p>
+          <p>Serve the JSON through an HTTPS reverse proxy or a properly secured tunnel; do not expose the bot's raw unauthenticated HTTP listener or put any bot token in the page, response, or browser config. Expose only the intended read-only status data, configure cross-origin access for the published site, and test the endpoint without secrets. Anyone able to load the public website can see the status fields it returns. For dependable long-term hosting, use a named Cloudflare Tunnel with a domain you control instead of a Quick Tunnel.</p>
           <p>If the URL is unset, HTTPS is unavailable, CORS blocks the browser, the endpoint cannot be reached, or the JSON is invalid, the page shows “Unable to verify.” An endpoint failure is not presented as proof that the bot is offline.</p>
         </section>
 
