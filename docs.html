@@ -91,9 +91,10 @@
         <hr class="paper-rule">
         <section id="configuration">
           <h2>Configuration &amp; local data</h2>
-          <p>The private bot token is entered at setup and saved in the operator's local <code>config.json</code>, which is ignored by Git. Runtime state is in <code>data/state.json</code>, also excluded from Git. Do not publish either file, and back up state securely.</p>
+          <p>The private bot token is entered at setup and saved in the operator's local <code>config.json</code>, which is ignored by Git. Runtime state is in <code>data/state.json</code>, also excluded from Git. Do not publish either file, and back up state securely. A manager can route moderation and available server-event logs to a chosen channel using <code>/setlogchannel channel_id</code>; these event logs include message contents.</p>
           <p>Depending on enabled commands, local state can include server settings; user IDs; moderation records and private notes; reminders; poll and giveaway entries; activity XP, Snoozer Coins, and AFK state. The exact data present varies by usage and configuration.</p>
           <p>The bot depends on Yapper for platform permissions, server actions, and API behavior. Availability and action outcomes can therefore also depend on Yapper and the operator's bot setup.</p>
+          <p>The Yapper bot event API does not deliver every kind of server change (for example, message edits/deletions or role/channel changes), so the event logger is not a complete audit trail. See the <a href="privacy.html">Privacy page</a> for what event logs contain.</p>
         </section>
 
         <hr class="paper-rule">
